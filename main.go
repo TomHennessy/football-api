@@ -1,11 +1,12 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	// "io/ioutil"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -38,5 +39,17 @@ func main() {
 		// log.Fatal(err)
 	}
 
-	// defer db.Close()
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Hello, World!")
+		fmt.Fprintln(w, "This is a print test")
+	})
+	go log.Fatal(http.ListenAndServe(":8080", nil))
+	select {}
+
+
+	// fmt.Printf("This is a print test")
+
+
+
+	defer db.Close()
 }
