@@ -1,13 +1,15 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	// "io/ioutil"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"net/http"
 )
+
+type server struct{}
 
 func main() {
 	// db, err := sql.Open("mysql", "user:password@tcp(127.0.0.1:3306)/football")
@@ -38,18 +40,24 @@ func main() {
 	if err != nil {
 		// log.Fatal(err)
 	}
+	
+	s := &server{}
+	http.Handle("/", s)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, "Hello, World!")
-		fmt.Fprintln(w, "This is a print test")
-	})
-	go log.Fatal(http.ListenAndServe(":8080", nil))
-	select {}
-
-
+	// http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	// 	fmt.Fprintln(w, "Hello, World!")
+	// 	fmt.Fprintln(w, "This is a print test")
+	// })
+	// go log.Fatal(http.ListenAndServe(":8080", nil))
+	// select {}
+	
 	// fmt.Printf("This is a print test")
-
-
-
 	defer db.Close()
+}
+
+func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"message": "hello world"}`))
 }
