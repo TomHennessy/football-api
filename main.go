@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	// "io/ioutil"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
@@ -33,7 +33,7 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Println(ID, FirstName)
+		// log.Println(ID, FirstName)
 		// fmt.Printf(ID, FirstName)
 	}
 	err = rows.Err()
@@ -41,6 +41,7 @@ func main() {
 		// log.Fatal(err)
 	}
 	
+	fmt.Printf("Go server running.")
 	s := &server{}
 	http.Handle("/", s)
 	log.Fatal(http.ListenAndServe(":8080", nil))
@@ -53,11 +54,23 @@ func main() {
 	// select {}
 	
 	// fmt.Printf("This is a print test")
+
 	defer db.Close()
 }
 
 func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(`{"message": "hello world"}`))
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	// w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET")
+    w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+
+	// w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	// w.Header().Set("Access-Control-Allow-Origin", "*")
+
+
+
+	w.Write([]byte(`{"message": "hellosdfdfd world"}`))
 }
